@@ -39,4 +39,6 @@ RUN cp .env.example .env 2>/dev/null || true \
 
 EXPOSE 8080
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+# 启动前先同步弱项画像相关的增量表结构（migration 均带 IF NOT EXISTS 保护，幂等安全），
+# 再启动服务；画像表与正式成绩表相互独立，不会改动既有成绩数据。
+CMD ["sh", "-c", "php artisan migrate --force || true; php artisan serve --host=0.0.0.0 --port=8080"]

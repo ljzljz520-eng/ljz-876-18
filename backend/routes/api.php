@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ClassController;
+use App\Http\Controllers\Api\ClassWeaknessController;
 use App\Http\Controllers\Api\ExamController;
 use App\Http\Controllers\Api\ExamPaperController;
 use App\Http\Controllers\Api\QuestionController;
 use App\Http\Controllers\Api\ScoreController;
+use App\Http\Controllers\Api\WeaknessController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('api')->prefix('auth')->group(function () {
@@ -51,5 +54,24 @@ Route::middleware(['api', 'auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::get('/statistics', [ScoreController::class, 'statistics']);
         Route::get('/ranking/{examPaper}', [ScoreController::class, 'ranking']);
         Route::get('/analysis/{examPaper}', [ScoreController::class, 'analysis']);
+    });
+
+    // 学生端：知识点弱项画像 + 真实错题/相近题练习（只作学习反馈，不影响正式成绩）
+    Route::prefix('weakness')->group(function () {
+        Route::get('/profile', [WeaknessController::class, 'profile']);
+        Route::get('/recommendations', [WeaknessController::class, 'recommendations']);
+        Route::post('/practice', [WeaknessController::class, 'submitPractice']);
+        Route::get('/practice/history', [WeaknessController::class, 'practiceHistory']);
+    });
+
+    // 教师端：班级管理 + 班级共同薄弱点
+    Route::prefix('classes')->group(function () {
+        Route::get('/student-options', [ClassController::class, 'studentOptions']);
+        Route::get('/', [ClassController::class, 'index']);
+        Route::post('/', [ClassController::class, 'store']);
+        Route::get('/{schoolClass}', [ClassController::class, 'show']);
+        Route::put('/{schoolClass}', [ClassController::class, 'update']);
+        Route::delete('/{schoolClass}', [ClassController::class, 'destroy']);
+        Route::get('/{schoolClass}/weakness', [ClassWeaknessController::class, 'show']);
     });
 });

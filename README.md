@@ -69,6 +69,10 @@ docker compose ps
 | Admin | admin@example.com | password |
 | Teacher | teacher@example.com | password |
 | Student | student1@example.com | password |
+| Student | student2@example.com | password |
+| Student | student3@example.com | password |
+
+> student1 ~ student3 同属演示班级「2026级软件工程1班」，已带有已评分考试记录，可直接体验弱项画像与班级薄弱点。
 
 > 登录页已移除快捷测试账号模块，请手动输入账号密码。
 
@@ -88,13 +92,19 @@ node scripts/verify-readme-test-credentials.mjs --manifest qa/.runtime/test-cred
 3. 试卷管理：试卷创建、编辑、题目关联。
 4. 在线考试：开始考试、提交答卷、自动评分。
 5. 成绩统计：个人成绩与管理端统计数据。
+6. 知识点弱项画像（学习反馈，不计入正式成绩）：
+   - 学生端：考试结束后按**知识点 / 题型 / 难度层级**查看失分分布与薄弱项；
+   - 练习推荐**只来自本人真实错题**与**同知识点、同题型、难度相近的题目**，不使用热门/做题量等热度信号；
+   - 教师端：按**班级**查看学生共同薄弱知识点、题型、难度，并定位需要关注的学生；
+   - 画像与练习数据独立存储（`practice_attempts` / `school_classes` / `class_student`），
+     只读引用已评分考试记录，**不会修改任何正式成绩**。
 
 ## 角色权限
 | 角色 | 可访问模块 |
 |---|---|
-| Student | 在线考试、我的成绩 |
-| Teacher | 在线考试、我的成绩、题库管理、试卷管理 |
-| Admin | 全部功能（含数据统计） |
+| Student | 在线考试、我的成绩、弱项画像 |
+| Teacher | 在线考试、我的成绩、题库管理、试卷管理、班级弱项 |
+| Admin | 全部功能（含数据统计、班级弱项） |
 
 ## 人工验证步骤（建议）
 1. 打开登录页：`http://localhost:8080/login`。
@@ -119,7 +129,9 @@ docker compose exec backend sh -lc "curl -s -X POST http://localhost:8080/api/au
 - CORS 与基础限流已配置。
 
 ## 数据库说明
-当前初始化后包含 10 张核心表（含用户、题目、试卷、考试记录、答案记录等）。
+初始化后包含 13 张表：10 张核心表（用户、题目、试卷、考试记录、答案记录等），
+以及弱项画像专用的 `school_classes`（班级）、`class_student`（班级学生关系）、
+`practice_attempts`（自主练习记录，独立于正式成绩）。
 
 详见：
 - `docs/Database.sql`

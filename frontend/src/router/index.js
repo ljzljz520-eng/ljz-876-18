@@ -39,6 +39,30 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/weakness',
+    name: 'WeaknessProfile',
+    component: () => import('../views/weakness/Profile.vue'),
+    meta: { requiresAuth: true, roles: ['student'] }
+  },
+  {
+    path: '/weakness/practice',
+    name: 'WeaknessPractice',
+    component: () => import('../views/weakness/Practice.vue'),
+    meta: { requiresAuth: true, roles: ['student'] }
+  },
+  {
+    path: '/classes',
+    name: 'Classes',
+    component: () => import('../views/classes/Index.vue'),
+    meta: { requiresAuth: true, roles: ['admin', 'teacher'] }
+  },
+  {
+    path: '/classes/:id/weakness',
+    name: 'ClassWeakness',
+    component: () => import('../views/classes/Weakness.vue'),
+    meta: { requiresAuth: true, roles: ['admin', 'teacher'] }
+  },
+  {
     path: '/questions',
     name: 'Questions',
     component: () => import('../views/questions/Index.vue'),

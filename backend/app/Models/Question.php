@@ -71,4 +71,14 @@ class Question extends Model
         return $this->belongsToMany(ExamPaper::class, 'exam_paper_questions')
             ->withPivot('sort_order', 'score');
     }
+
+    public function practiceAttempts()
+    {
+        return $this->hasMany(PracticeAttempt::class, 'question_id');
+    }
+
+    public function difficultyLabel(): string
+    {
+        return self::DIFFICULTIES[$this->difficulty] ?? (string) $this->difficulty;
+    }
 }
