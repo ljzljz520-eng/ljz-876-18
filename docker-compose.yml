@@ -266,6 +266,19 @@ services:
       - exam-network
     ports:
       - "9000:8080"
+    # 启动前幂等地准备「弱项画像/课后练习」所需表与演示数据（不影响正式成绩）
+    command:
+      - sh
+      - -c
+      - |
+        for i in $$(seq 1 60); do
+          if php artisan exam:setup-knowledge-profile --ansi; then
+            break
+          fi
+          echo "waiting for database..."
+          sleep 2
+        done
+        php artisan serve --host=0.0.0.0 --port=8080
 
   frontend:
     build:

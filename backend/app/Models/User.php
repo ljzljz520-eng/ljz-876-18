@@ -70,4 +70,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(ExamRecord::class, 'user_id');
     }
+
+    public function classes()
+    {
+        return $this->belongsToMany(ClassRoom::class, 'class_student', 'user_id', 'class_id')
+            ->withTimestamps();
+    }
+
+    public function taughtClasses()
+    {
+        return $this->hasMany(ClassRoom::class, 'teacher_id');
+    }
+
+    public function practiceAttempts()
+    {
+        return $this->hasMany(PracticeAttempt::class, 'user_id');
+    }
 }

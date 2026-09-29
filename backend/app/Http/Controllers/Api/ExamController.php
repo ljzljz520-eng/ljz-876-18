@@ -7,6 +7,7 @@ use App\Models\ExamPaper;
 use App\Models\ExamRecord;
 use App\Models\ExamRecordAnswer;
 use App\Models\Question;
+use App\Support\AnswerChecker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -129,7 +130,7 @@ class ExamController extends Controller
                 continue;
             }
 
-            $isCorrect = $this->checkAnswer($question, $answerData['answer']);
+            $isCorrect = AnswerChecker::isCorrect($question, $answerData['answer']);
             $score = $isCorrect ? $question->pivot->score : 0;
 
             ExamRecordAnswer::create([
@@ -183,22 +184,7 @@ class ExamController extends Controller
 
     protected function checkAnswer(Question $question, string $userAnswer): bool
     {
-        $correctAnswer = $question->answer;
-
-        switch ($question->type) {
-            case 'single_choice':
-            case 'true_false':
-                return strtoupper(trim($userAnswer)) === strtoupper(trim($correctAnswer));
-            case 'multiple_choice':
-                $userAnswers = explode(',', strtoupper(trim($userAnswer)));
-                $correctAnswers = explode(',', strtoupper(trim($correctAnswer)));
-                sort($userAnswers);
-                sort($correctAnswers);
-                return $userAnswers === $correctAnswers;
-            case 'fill_blank':
-                return strtoupper(trim($userAnswer)) === strtoupper(trim($correctAnswer));
-            default:
-                return false;
-        }
+        // 判分逻辑已统一收敛到 App\Support\AnswerChecker，正式考试与课后练习共用同一口径。
+        return (bool) AnswerChecker::isCorrect($question, $userAnswer);
     }
 }

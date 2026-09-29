@@ -100,16 +100,38 @@
               >
                 在线考试
               </router-link>
-              <router-link 
-                to="/records" 
+              <router-link
+                to="/records"
                 class="nav-link"
                 :class="{ 'nav-link-active': $route.path === '/records' }"
               >
                 我的成绩
               </router-link>
-              <router-link 
-                v-if="authStore.isTeacher" 
-                to="/questions" 
+              <router-link
+                to="/weakness/me"
+                class="nav-link"
+                :class="{ 'nav-link-active': $route.path === '/weakness/me' }"
+              >
+                弱项画像
+              </router-link>
+              <router-link
+                to="/practice"
+                class="nav-link"
+                :class="{ 'nav-link-active': $route.path === '/practice' }"
+              >
+                个性练习
+              </router-link>
+              <router-link
+                v-if="authStore.isTeacher"
+                to="/weakness/classes"
+                class="nav-link"
+                :class="{ 'nav-link-active': $route.path === '/weakness/classes' }"
+              >
+                班级薄弱点
+              </router-link>
+              <router-link
+                v-if="authStore.isTeacher"
+                to="/questions"
                 class="nav-link"
                 :class="{ 'nav-link-active': $route.path === '/questions' }"
               >
@@ -155,6 +177,9 @@
         <div class="px-2 py-2 space-y-1">
           <router-link to="/exams" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/exams' }">在线考试</router-link>
           <router-link to="/records" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/records' }">我的成绩</router-link>
+          <router-link to="/weakness/me" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/weakness/me' }">弱项画像</router-link>
+          <router-link to="/practice" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/practice' }">个性练习</router-link>
+          <router-link v-if="authStore.isTeacher" to="/weakness/classes" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/weakness/classes' }">班级薄弱点</router-link>
           <router-link v-if="authStore.isTeacher" to="/questions" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/questions' }">题库管理</router-link>
           <router-link v-if="authStore.isTeacher" to="/exam-papers" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/exam-papers' }">试卷管理</router-link>
           <router-link v-if="authStore.isAdmin" to="/statistics" class="mobile-nav-link" :class="{ 'mobile-nav-link-active': $route.path === '/statistics' }">数据统计</router-link>
